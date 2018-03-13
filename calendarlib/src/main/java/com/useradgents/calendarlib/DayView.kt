@@ -22,6 +22,13 @@ class DayView : FrameLayout {
 
     private fun init(context: Context?, attrs: AttributeSet?) {
         LayoutInflater.from(context).inflate(R.layout.day, this, true)
+        val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.DayView, 0, 0)
+        try {
+            val label = a?.getString(R.styleable.DayView_day_text)
+            day.text = label
+        } finally {
+            a?.recycle()
+        }
     }
 
     fun setText(s: String) {
