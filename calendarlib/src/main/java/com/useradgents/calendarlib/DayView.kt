@@ -5,8 +5,17 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.day.view.*
+import java.util.*
 
 class DayView : FrameLayout {
+
+    private lateinit var date: Date
+    private var listener: ((Date) -> Unit)? = null
+
+    constructor(context: Context?, date: Date) : super(context) {
+        this.date = date
+        init(context, null)
+    }
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -29,9 +38,14 @@ class DayView : FrameLayout {
         } finally {
             a?.recycle()
         }
+        setOnClickListener { listener?.invoke(date) }
     }
 
     fun setText(s: String) {
         day.text = s
+    }
+
+    fun onClickListener(listener: (Date) -> Unit) {
+        this.listener = listener
     }
 }

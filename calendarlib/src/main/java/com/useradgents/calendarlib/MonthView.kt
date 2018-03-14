@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.TableRow
-import kotlinx.android.synthetic.main.day.view.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,8 +40,6 @@ class MonthView : ConstraintLayout {
 
         cal.add(Calendar.MONTH, 5)//TODO remove
 
-        val sdf = SimpleDateFormat("EEE yyyy-MM-dd 'at' HH:mm:ss z")
-        val dayFormat = SimpleDateFormat("d")
         val baseMonth = cal.get(Calendar.MONTH)
 
         while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
@@ -54,20 +52,29 @@ class MonthView : ConstraintLayout {
         (0 until nbWeeksOfMonth).forEach { l ->
             val row = LayoutInflater.from(context).inflate(R.layout.row, monthTable, false) as TableRow
             (0 until 7).forEach { r ->
-                Log.e(TAG, "[$l,$r] test=${sdf.format(cal.time)}")
-                val dayView = DayView(context)
+                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
+                val dayView = DayView(context, cal.time)
                 if (cal.get(Calendar.MONTH) == baseMonth) {
-                    dayView.setText(dayFormat.format(cal.time))
+                    dayView.setText(cal.time.dayOfMonth())
+                } else {
+                    dayView.isEnabled = false
+                }
+                dayView.onClickListener {
+                    Toast.makeText(context, it.day(), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "clicked: ${it.day()}")
                 }
                 row.addView(dayView)
                 cal.add(Calendar.DAY_OF_MONTH, 1)
             }
             monthTable.addView(row)
         }
-
-    }
-
-    fun setText(s: String) {
-        day.text = s
     }
 }
+
+fun Date.fullFormat(): String =
+        SimpleDateFormat("EEE yyyy-MM-dd 'at' HH:mm:ss z", Locale.getDefault()).format(this)
+
+fun Date.day(): String = SimpleDateFormat("EEE yyyy-MM-dd", Locale.getDefault()).format(this)
+
+
+fun Date.dayOfMonth(): String = SimpleDateFormat("d", Locale.getDefault()).format(this)
