@@ -2,7 +2,6 @@ package com.useradgents.calendarlib
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TableRow
@@ -45,7 +44,6 @@ class MonthView : LinearLayout {
 
         val baseMonth = cal.get(Calendar.MONTH)
         val nbDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        Log.e(TAG, "nbDayOfMonth=$nbDayOfMonth pour ${cal.time.fullFormat()}")
         monthName.text = cal.time.month()
 
         var dayOffset = 0
@@ -68,7 +66,6 @@ class MonthView : LinearLayout {
                 }
                 dayView.onClickListener {
                     Toast.makeText(context, it.day(), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "clicked: ${it.day()}")
                 }
                 row.addView(dayView)
                 cal.add(Calendar.DAY_OF_MONTH, 1)

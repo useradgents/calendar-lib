@@ -1,6 +1,7 @@
 package com.useradgents.calendarlib
 
 import android.content.Context
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.widget.FrameLayout
 import com.useradgents.calendarlib.adapter.CalendarAdapter
 import kotlinx.android.synthetic.main.calendar.view.*
 import java.util.*
+
+
 
 class CalendarView : FrameLayout {
 
@@ -40,9 +43,13 @@ class CalendarView : FrameLayout {
 //            a?.recycle()
 //        }
         setOnClickListener { listener?.invoke(date) }
-        calendarRecyclerView.layoutManager = LinearLayoutManager(context)
+        val linearManager = LinearLayoutManager(context)
+        calendarRecyclerView.layoutManager = linearManager
         val adapter = CalendarAdapter()
         adapter.items = (0 until 24).toMutableList()
         calendarRecyclerView.adapter = adapter
+        val dividerItemDecoration = DividerItemDecoration(context,
+                linearManager.orientation)
+        calendarRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 }
