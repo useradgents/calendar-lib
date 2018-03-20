@@ -1,7 +1,11 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -14,8 +18,11 @@ import java.util.*
 class MonthView : LinearLayout {
     private val TAG = "MonthView"
 
+    private lateinit var uiHandler: Handler
+    private lateinit var workerHandler: Handler
     var availableDays: List<Date>? = null
     var selectedDays: List<Date>? = null
+    private lateinit var workerThread: HandlerThread
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -30,6 +37,10 @@ class MonthView : LinearLayout {
     }
 
     private fun init(context: Context?, attrs: AttributeSet?) {
+        workerThread = HandlerThread("MonthWorker")
+        workerThread.start()
+        workerHandler = Handler(workerThread.looper)
+        uiHandler = Handler(Looper.getMainLooper())
         LayoutInflater.from(context).inflate(R.layout.month, this, true)
         orientation = LinearLayout.VERTICAL
     }
@@ -60,6 +71,10 @@ class MonthView : LinearLayout {
 
         monthTable.removeAllViews()
         val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if ((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
+        workerHandler.removeCallbacksAndMessages(null)
+        uiHandler.removeCallbacksAndMessages(null)
+        workerHandler.post {
+            val rows = mutableListOf<TableRow>()
         (0 until nbLines).forEach { l ->
             val row = LayoutInflater.from(context).inflate(R.layout.row, monthTable, false) as TableRow
             (0 until 7).forEach { r ->
@@ -69,19 +84,26 @@ class MonthView : LinearLayout {
                     dayView.setText(cal.time.dayOfMonth())
                     if (availableDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isEnabled = false
-                    } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
+} else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isSelected = true
                     }
                 } else {
                     dayView.isEnabled = false
                 }
-                dayView.onClickListener { date, view ->
+                    dayView.onClickListener { date, view ->
                     listener?.invoke(date, view)
                 }
-                row.addView(dayView)
-                cal.add(Calendar.DAY_OF_MONTH, 1)
+                    row.addView(dayView)
+                    cal.add(Calendar.DAY_OF_MONTH, 1)
+                }
+ rows.add(row)
             }
-            monthTable.addView(row)
+
+            uiHandler.post {
+                rows.forEach {
+                    monthTable.addView(it)
+                }
+            }
         }
     }
 
