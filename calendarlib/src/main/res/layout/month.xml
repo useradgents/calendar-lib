@@ -3,21 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="android.widget.LinearLayout">
+    tools:parentTag="android.widget.FrameLayout">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/monthName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        tools:text="fevrier 2018" />
+        android:orientation="vertical">
 
-    <TableLayout
-        android:id="@+id/monthTable"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/monthName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            tools:text="fevrier 2018" />
+
+        <TableLayout
+            android:id="@+id/monthTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:stretchColumns="*"
+            android:visibility="invisible">
+
+        </TableLayout>
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:stretchColumns="*">
+        android:layout_height="match_parent">
 
-    </TableLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+    </FrameLayout>
+
 </merge>

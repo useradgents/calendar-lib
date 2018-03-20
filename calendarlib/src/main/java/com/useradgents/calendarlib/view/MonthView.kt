@@ -8,14 +8,14 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.TableRow
 import com.useradgents.calendarlib.R
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MonthView : LinearLayout {
+class MonthView : FrameLayout {
     private val TAG = "MonthView"
 
     private lateinit var uiHandler: Handler
@@ -42,7 +42,6 @@ class MonthView : LinearLayout {
         workerHandler = Handler(workerThread.looper)
         uiHandler = Handler(Looper.getMainLooper())
         LayoutInflater.from(context).inflate(R.layout.month, this, true)
-        orientation = LinearLayout.VERTICAL
     }
 
     private var listener: ((Date, View) -> Unit)? = null
@@ -73,6 +72,8 @@ class MonthView : LinearLayout {
         val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if ((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
         workerHandler.removeCallbacksAndMessages(null)
         uiHandler.removeCallbacksAndMessages(null)
+        progressBar.visibility = View.VISIBLE
+        monthTable.visibility = View.INVISIBLE
         workerHandler.post {
             val rows = mutableListOf<TableRow>()
         (0 until nbLines).forEach { l ->
@@ -84,6 +85,7 @@ class MonthView : LinearLayout {
                     dayView.setText(cal.time.dayOfMonth())
                     if (availableDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isEnabled = false
+                    }
 } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isSelected = true
                     }
@@ -103,6 +105,8 @@ class MonthView : LinearLayout {
                 rows.forEach {
                     monthTable.addView(it)
                 }
+                progressBar.visibility = View.GONE
+                monthTable.visibility = View.VISIBLE
             }
         }
     }
