@@ -1,17 +1,16 @@
 package com.useradgents.calendarlib
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
+import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.Toast
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MonthView : ConstraintLayout {
+class MonthView : LinearLayout {
     private val TAG = "MonthView"
 
     constructor(context: Context?) : super(context) {
@@ -28,7 +27,10 @@ class MonthView : ConstraintLayout {
 
     private fun init(context: Context?, attrs: AttributeSet?) {
         LayoutInflater.from(context).inflate(R.layout.month, this, true)
+        orientation = LinearLayout.VERTICAL
+    }
 
+    fun setDeltaMonth(month: Int) {
         val cal = Calendar.getInstance()
         cal.firstDayOfWeek = Calendar.MONDAY
 
@@ -38,21 +40,24 @@ class MonthView : ConstraintLayout {
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
 
-        cal.add(Calendar.MONTH, 5)//TODO remove
+        cal.add(Calendar.MONTH, month)
 
         val baseMonth = cal.get(Calendar.MONTH)
+        val nbDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        monthName.text = cal.time.month()
 
+        var dayOffset = 0
         while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            dayOffset++
             cal.add(Calendar.DAY_OF_MONTH, -1)
         }
 
-        val nbWeeksOfMonth = cal.getActualMaximum(Calendar.WEEK_OF_MONTH)
-        Log.e(TAG, "nbWeeksOfMonth=$nbWeeksOfMonth")
-
-        (0 until nbWeeksOfMonth).forEach { l ->
+        monthTable.removeAllViews()
+        val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
+        (0 until nbLines).forEach { l ->
             val row = LayoutInflater.from(context).inflate(R.layout.row, monthTable, false) as TableRow
             (0 until 7).forEach { r ->
-                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
+//                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
                 val dayView = DayView(context, cal.time)
                 if (cal.get(Calendar.MONTH) == baseMonth) {
                     dayView.setText(cal.time.dayOfMonth())
@@ -61,7 +66,6 @@ class MonthView : ConstraintLayout {
                 }
                 dayView.onClickListener {
                     Toast.makeText(context, it.day(), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "clicked: ${it.day()}")
                 }
                 row.addView(dayView)
                 cal.add(Calendar.DAY_OF_MONTH, 1)
@@ -78,3 +82,5 @@ fun Date.day(): String = SimpleDateFormat("EEE yyyy-MM-dd", Locale.getDefault())
 
 
 fun Date.dayOfMonth(): String = SimpleDateFormat("d", Locale.getDefault()).format(this)
+
+fun Date.month(): String = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(this)

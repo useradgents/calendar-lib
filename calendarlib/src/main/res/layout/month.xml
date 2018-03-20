@@ -3,7 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="android.support.constraint.ConstraintLayout">
+    tools:parentTag="android.widget.LinearLayout">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/monthName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:text="fevrier 2018" />
 
     <TableLayout
         android:id="@+id/monthTable"
