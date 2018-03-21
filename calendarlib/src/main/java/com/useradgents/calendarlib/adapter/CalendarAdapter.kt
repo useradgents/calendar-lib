@@ -1,13 +1,12 @@
 package com.useradgents.calendarlib.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.useradgents.calendarlib.view.MonthView
 import java.util.*
 
-class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
+class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null, val selectedColor: Int, val disabledColor: Int) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
     var items = mutableListOf<Int>()
     var i = 0
     var dateList: List<Date>?= null
@@ -29,9 +28,10 @@ class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null) : RecyclerVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GenericViewHolder? {
-        i++
-        Log.e("ewi", "new view holder $i)")
         val view = MonthView(parent?.context)
+        view.selectedColor = selectedColor
+        view.disabledColor = disabledColor
+
         viewList.add(view)
         return CalendarViewHolder(view)
     }

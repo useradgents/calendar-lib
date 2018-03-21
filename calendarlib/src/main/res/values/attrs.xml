@@ -3,4 +3,9 @@
     <declare-styleable name="DayView">
         <attr name="day_text" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="CalendarView">
+        <attr name="selected_color"/>
+        <attr name="disabled_color"/>
+    </declare-styleable>
 </resources>

@@ -1,9 +1,11 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.useradgents.calendarlib.R
@@ -25,6 +27,10 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private var onRangeSelectedListener: ((Date, Date) -> Unit)? = null
     private lateinit var controller: CalendarController
     private lateinit var adapter: CalendarAdapter
+
+    private var disabledColor: Int = 0
+    private var selectedColor: Int = 0
+
 
     var notAvailableDays: List<Date> ?= null
         set(list) {
@@ -58,14 +64,16 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         controller = CalendarController(this)
 
         LayoutInflater.from(context).inflate(R.layout.calendar, this, true)
-        //val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.DayView, 0, 0)
-//        try {
-//            val label = a?.getString(R.styleable.DayView_day_text)
-//        } finally {
-//            a?.recycle()
-//        }
+        val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.CalendarView, 0, 0)
+        try {
+            disabledColor = a?.getColor(R.styleable.CalendarView_disabled_color, Color.parseColor("#55555555")) ?: Color.parseColor("#55555555")
+        } finally {
+            a?.recycle()
+        }
+        selectedColor = fetchAccentColor(attrs)
+
         val linearManager = LinearLayoutManager(context)
-        adapter = CalendarAdapter({ date, day -> controller.onDayClicked(date, day) })
+        adapter = CalendarAdapter({ date, day -> controller.onDayClicked(date, day) }, selectedColor, disabledColor)
 
         val dividerItemDecoration = DividerItemDecoration(context,
                 linearManager.orientation)
@@ -107,5 +115,24 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     override fun onFirstDateSet(date: Date) {
         adapter.selectedDays = arrayListOf(date)
         onDateSelectedListener?.invoke(date)
+    }
+
+
+    private fun fetchAccentColor(attrs: AttributeSet?): Int {
+        val a = context.obtainStyledAttributes(
+                attrs,
+                R.styleable.CalendarView)
+
+        var color = a.getColor(R.styleable.CalendarView_selected_color, Color.BLACK)
+        a.recycle()
+
+        if (color == Color.BLACK) {
+            val typedValue = TypedValue()
+            val b = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorAccent))
+            color = b.getColor(0, 0)
+            b.recycle()
+        }
+
+        return color
     }
 }

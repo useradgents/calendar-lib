@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TableRow
 import com.useradgents.calendarlib.R
+import kotlinx.android.synthetic.main.day.view.*
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,6 +30,8 @@ class MonthView : FrameLayout {
 
     private var listener: ((Date, View) -> Unit)? = null
 
+    var selectedColor: Int = 0
+    var disabledColor: Int = 0
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -87,6 +90,9 @@ class MonthView : FrameLayout {
                 (0 until 7).forEach { r ->
                     //                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
                     val dayView = DayView(context, cal.time)
+                    dayView.selectedColor = selectedColor
+                    dayView.disabledColor = disabledColor
+
                     viewList.add(dayView)
 
                     if (cal.get(Calendar.MONTH) == baseMonth) {

@@ -10,10 +10,13 @@ import com.useradgents.calendarlib.R
 import kotlinx.android.synthetic.main.day.view.*
 import java.util.*
 
+
 class DayView : FrameLayout {
 
     lateinit var date: Date
     private var listener: ((Date, View) -> Unit)? = null
+    internal var selectedColor: Int = 0
+    internal var disabledColor: Int = 0
 
     constructor(context: Context?, date: Date) : super(context) {
         this.date = Date(date.time)
@@ -48,14 +51,14 @@ class DayView : FrameLayout {
         day.text = s
     }
 
-    fun getText() = day.text
+    fun getText(): CharSequence = day.text
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         if (enabled) {
             day.setTextColor(Color.BLACK)
         } else {
-            day.setTextColor(Color.RED)
+            day.setTextColor(disabledColor)
         }
         invalidate()
     }
@@ -63,9 +66,9 @@ class DayView : FrameLayout {
     override fun setSelected(selected: Boolean) {
         super.setSelected(selected)
         if (selected) {
-            day.setBackgroundColor(Color.RED)
+            setBackgroundColor(selectedColor)
         } else {
-            day.setBackgroundColor(Color.TRANSPARENT)
+            setBackgroundColor(Color.TRANSPARENT)
         }
         invalidate()
     }
