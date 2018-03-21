@@ -95,7 +95,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
 
         while (cal.time.before(secondDate)) {
             list.add(cal.time)
-            cal.add(Calendar.HOUR, 24)
+            cal.add(Calendar.DAY_OF_YEAR, 1)
         }
 
         list.add(secondDate)
