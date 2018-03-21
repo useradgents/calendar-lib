@@ -18,6 +18,8 @@ import java.util.*
 class MonthView : FrameLayout {
     private val TAG = "MonthView"
 
+    var availableDays: List<Date>? = null
+    var selectedDays: List<Date>? = null
     private lateinit var uiHandler: Handler
     private lateinit var workerHandler: Handler
     var availableDays: List<Date>? = null
@@ -85,6 +87,8 @@ class MonthView : FrameLayout {
                     dayView.setText(cal.time.dayOfMonth())
                     if (availableDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isEnabled = false
+                    } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
+                        dayView.isSelected = true
                     }
 } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
                         dayView.isSelected = true
