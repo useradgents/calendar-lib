@@ -1,16 +1,19 @@
-package com.useradgents.calendarlib
+package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
+import com.useradgents.calendarlib.R
 import kotlinx.android.synthetic.main.day.view.*
 import java.util.*
 
 class DayView : FrameLayout {
 
     private lateinit var date: Date
-    private var listener: ((Date) -> Unit)? = null
+    private var listener: ((Date, View) -> Unit)? = null
 
     constructor(context: Context?, date: Date) : super(context) {
         this.date = date
@@ -38,14 +41,26 @@ class DayView : FrameLayout {
         } finally {
             a?.recycle()
         }
-        setOnClickListener { listener?.invoke(date) }
+        setOnClickListener { listener?.invoke(date, this) }
     }
 
     fun setText(s: String) {
         day.text = s
     }
 
-    fun onClickListener(listener: (Date) -> Unit) {
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        day.setTextColor(Color.RED)
+        invalidate()
+    }
+
+    override fun setSelected(selected: Boolean) {
+        super.setSelected(selected)
+        day.setBackgroundColor(Color.RED)
+        invalidate()
+    }
+
+    fun onClickListener(listener: (Date, View) -> Unit) {
         this.listener = listener
     }
 }

@@ -1,17 +1,21 @@
-package com.useradgents.calendarlib
+package com.useradgents.calendarlib.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TableRow
-import android.widget.Toast
+import com.useradgents.calendarlib.R
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MonthView : LinearLayout {
     private val TAG = "MonthView"
+
+    var availableDays: List<Date>? = null
+    var selectedDays: List<Date>? = null
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -29,6 +33,8 @@ class MonthView : LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.month, this, true)
         orientation = LinearLayout.VERTICAL
     }
+
+    private var listener: ((Date, View) -> Unit)? = null
 
     fun setDeltaMonth(month: Int) {
         val cal = Calendar.getInstance()
@@ -53,25 +59,34 @@ class MonthView : LinearLayout {
         }
 
         monthTable.removeAllViews()
-        val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
+        val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if ((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
         (0 until nbLines).forEach { l ->
             val row = LayoutInflater.from(context).inflate(R.layout.row, monthTable, false) as TableRow
             (0 until 7).forEach { r ->
-//                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
+                //                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
                 val dayView = DayView(context, cal.time)
                 if (cal.get(Calendar.MONTH) == baseMonth) {
                     dayView.setText(cal.time.dayOfMonth())
+                    if (availableDays?.firstOrNull { it.time == cal.time.time } != null) {
+                        dayView.isEnabled = false
+                    } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
+                        dayView.isSelected = true
+                    }
                 } else {
                     dayView.isEnabled = false
                 }
-                dayView.onClickListener {
-                    Toast.makeText(context, it.day(), Toast.LENGTH_SHORT).show()
+                dayView.onClickListener { date, view ->
+                    listener?.invoke(date, view)
                 }
                 row.addView(dayView)
                 cal.add(Calendar.DAY_OF_MONTH, 1)
             }
             monthTable.addView(row)
         }
+    }
+
+    fun setOnClickListener(listener: (Date, View) -> Unit) {
+        this.listener = listener
     }
 }
 

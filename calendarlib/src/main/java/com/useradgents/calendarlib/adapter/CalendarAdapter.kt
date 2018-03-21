@@ -3,10 +3,23 @@ package com.useradgents.calendarlib.adapter
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.useradgents.calendarlib.MonthView
+import com.useradgents.calendarlib.view.MonthView
+import java.util.*
 
-class CalendarAdapter(val listener: (() -> Unit)? = null) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
+class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
     var items = mutableListOf<Int>()
+    var dateList: List<Date>?= null
+        set(list) {
+            field = list
+            notifyDataSetChanged()
+        }
+
+    var selectedDays: List<Date>?= null
+        set(list) {
+            field = list
+            notifyDataSetChanged()
+        }
+
 
     override fun onBindViewHolder(holder: GenericViewHolder?, position: Int) {
         holder?.bind(items[position])
@@ -28,7 +41,11 @@ class CalendarAdapter(val listener: (() -> Unit)? = null) : RecyclerView.Adapter
             val month = t as Int
             when (itemView) {
                 is MonthView -> {
+                    itemView.availableDays = dateList
+                    itemView.selectedDays = selectedDays
                     itemView.setDeltaMonth(month)
+                    itemView.setOnClickListener { date, day -> listener?.invoke(date, day) }
+
                 }
             }
         }

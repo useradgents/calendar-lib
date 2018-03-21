@@ -17,43 +17,43 @@
         android:layout_height="50dp"
         android:background="#FAFAFA">
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="L" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="M" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="M" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="J" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="V" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:day_text="S" />
 
-        <com.useradgents.calendarlib.DayView
+        <com.useradgents.calendarlib.view.DayView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
