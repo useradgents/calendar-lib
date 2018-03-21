@@ -19,9 +19,16 @@ class MonthView : FrameLayout {
 
     private lateinit var uiHandler: Handler
     private lateinit var workerHandler: Handler
-    var availableDays: List<Date>? = null
+    var disabledDays: List<Date>? = null
     var selectedDays: List<Date>? = null
     private lateinit var workerThread: HandlerThread
+    private val viewList = ArrayList<DayView>()
+
+    private var baseMonth: Int = 0
+    private var cal: Calendar = Calendar.getInstance()
+
+    private var listener: ((Date, View) -> Unit)? = null
+
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -43,10 +50,9 @@ class MonthView : FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.month, this, true)
     }
 
-    private var listener: ((Date, View) -> Unit)? = null
 
     fun setDeltaMonth(month: Int) {
-        val cal = Calendar.getInstance()
+        cal = Calendar.getInstance()
         cal.firstDayOfWeek = Calendar.MONDAY
 
         cal.set(Calendar.DAY_OF_MONTH, 1)
@@ -57,7 +63,7 @@ class MonthView : FrameLayout {
 
         cal.add(Calendar.MONTH, month)
 
-        val baseMonth = cal.get(Calendar.MONTH)
+        baseMonth = cal.get(Calendar.MONTH)
         val nbDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
         monthName.text = cal.time.month()
 
@@ -68,6 +74,7 @@ class MonthView : FrameLayout {
         }
 
         monthTable.removeAllViews()
+        viewList.clear()
         val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if ((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
         workerHandler.removeCallbacksAndMessages(null)
         uiHandler.removeCallbacksAndMessages(null)
@@ -80,21 +87,22 @@ class MonthView : FrameLayout {
                 (0 until 7).forEach { r ->
                     //                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
                     val dayView = DayView(context, cal.time)
+                    viewList.add(dayView)
+
                     if (cal.get(Calendar.MONTH) == baseMonth) {
                         dayView.setText(cal.time.dayOfMonth())
-                        if (availableDays?.firstOrNull { it.time == cal.time.time } != null) {
+                        if (disabledDays?.firstOrNull { it.time == cal.time.time } != null && dayView.getText().isNotEmpty()) {
                             dayView.isEnabled = false
-                        } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
+                        } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null && dayView.getText().isNotEmpty()) {
                             dayView.isSelected = true
                         }
-                    } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null) {
-                        dayView.isSelected = true
                     } else {
                         dayView.isEnabled = false
                     }
                     dayView.onClickListener { date, view ->
                         listener?.invoke(date, view)
                     }
+
                     row.addView(dayView)
                     cal.add(Calendar.DAY_OF_MONTH, 1)
                 }
@@ -111,8 +119,20 @@ class MonthView : FrameLayout {
         }
     }
 
+    private fun updateView(dayView: DayView) {
+        if (dayView.getText().isNotEmpty()) {
+            dayView.isEnabled = disabledDays?.firstOrNull { it.time == dayView.date.time } == null
+            dayView.isSelected = selectedDays?.firstOrNull { it.time == dayView.date.time } != null
+        }
+    }
+
     fun setOnClickListener(listener: (Date, View) -> Unit) {
         this.listener = listener
+    }
+
+    fun refresh(field: List<Date>?) {
+        selectedDays = field
+        viewList.forEach { updateView(it) }
     }
 }
 

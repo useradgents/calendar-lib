@@ -12,11 +12,11 @@ import java.util.*
 
 class DayView : FrameLayout {
 
-    private lateinit var date: Date
+    lateinit var date: Date
     private var listener: ((Date, View) -> Unit)? = null
 
     constructor(context: Context?, date: Date) : super(context) {
-        this.date = date
+        this.date = Date(date.time)
         init(context, null)
     }
 
@@ -48,15 +48,25 @@ class DayView : FrameLayout {
         day.text = s
     }
 
+    fun getText() = day.text
+
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        day.setTextColor(Color.RED)
+        if (enabled) {
+            day.setTextColor(Color.BLACK)
+        } else {
+            day.setTextColor(Color.RED)
+        }
         invalidate()
     }
 
     override fun setSelected(selected: Boolean) {
         super.setSelected(selected)
-        day.setBackgroundColor(Color.RED)
+        if (selected) {
+            day.setBackgroundColor(Color.RED)
+        } else {
+            day.setBackgroundColor(Color.TRANSPARENT)
+        }
         invalidate()
     }
 
