@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="#ffffff"/>
-    <size
-        android:width="10dp"
-        android:height="10dp"/>
-    <corners
-        android:bottomLeftRadius="20dp"
-        android:topLeftRadius="20dp"/>
-</shape>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:left="2dp"
+    android:bottom="3dp"
+    android:top="2dp">
+    <shape
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+        <solid android:color="#ffffff"/>
+        <size
+            android:width="10dp"
+            android:height="10dp"/>
+        <corners
+            android:bottomLeftRadius="20dp"
+            android:topLeftRadius="20dp"/>
+    </shape>
+</item>
+</layer-list>

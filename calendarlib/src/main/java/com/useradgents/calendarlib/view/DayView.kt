@@ -55,6 +55,9 @@ class DayView : FrameLayout {
         } finally {
             a?.recycle()
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            elevation = 5F
+        }
         setOnClickListener { listener?.invoke(date, this) }
     }
 
