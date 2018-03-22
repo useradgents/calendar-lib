@@ -14,7 +14,6 @@ import com.useradgents.calendarlib.controller.CalendarController
 import com.useradgents.calendarlib.controller.CalendarViewInterface
 import kotlinx.android.synthetic.main.calendar.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CalendarView : FrameLayout, CalendarViewInterface {
@@ -25,8 +24,12 @@ class CalendarView : FrameLayout, CalendarViewInterface {
 
     private var onDateSelectedListener: ((Date) -> Unit)? = null
     private var onRangeSelectedListener: ((Date, Date) -> Unit)? = null
+    private var onUnavailableDate: (() -> Unit)? = null
     private lateinit var controller: CalendarController
     private lateinit var adapter: CalendarAdapter
+
+    var firstSelectedDays: Date? = null
+    var secondSelectedDays: Date? = null
 
     private var disabledColor: Int = 0
     private var selectedColor: Int = 0
@@ -92,31 +95,23 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         onRangeSelectedListener = listener
     }
 
+    fun setOnUnavailableDate(listener: (() -> Unit)?) {
+        onUnavailableDate = listener
+    }
+
     override fun onSecondDateSet(firstDate: Date, secondDate: Date) {
-        val list = ArrayList<Date>()
-        val cal = Calendar.getInstance()
-        cal.time = firstDate
-        cal.set(Calendar.HOUR_OF_DAY, 10)            // set hour to midnight
-        cal.set(Calendar.MINUTE, 0)                 // set minute in hour
-        cal.set(Calendar.SECOND, 0)                 // set second in minute
-        cal.set(Calendar.MILLISECOND, 0)
-
-        while (cal.time.before(secondDate)) {
-            list.add(cal.time)
-            cal.add(Calendar.DAY_OF_YEAR, 1)
-        }
-
-        list.add(secondDate)
-
-        adapter.selectedDays = list
+        adapter.setSelectedDays(firstDate, secondDate)
         onRangeSelectedListener?.invoke(firstDate, secondDate)
     }
 
     override fun onFirstDateSet(date: Date) {
-        adapter.selectedDays = arrayListOf(date)
+        adapter.setSelectedDays(date, null)
         onDateSelectedListener?.invoke(date)
     }
 
+    override fun onUnavailableDate() {
+        onUnavailableDate?.invoke()
+    }
 
     private fun fetchAccentColor(attrs: AttributeSet?): Int {
         val a = context.obtainStyledAttributes(

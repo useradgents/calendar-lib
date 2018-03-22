@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         calendar.setOnRangeSelectedListener { first, second -> Toast.makeText (this, "ewi $first, enon: $second", Toast.LENGTH_LONG).show() }
+        calendar.setOnUnavailableDate { Toast.makeText (this, "Choisissez un intervalle sans jour indisponilbe, n00b", Toast.LENGTH_LONG).show() }
+
         val cal = Calendar.getInstance()
         cal.set(2018, 4, 25)
         calendar.notAvailableDays = arrayListOf(cal.time)

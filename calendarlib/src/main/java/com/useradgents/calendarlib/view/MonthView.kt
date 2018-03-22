@@ -1,6 +1,7 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -10,18 +11,19 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TableRow
 import com.useradgents.calendarlib.R
-import kotlinx.android.synthetic.main.day.view.*
 import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MonthView : FrameLayout {
-    private val TAG = "MonthView"
-
     private lateinit var uiHandler: Handler
     private lateinit var workerHandler: Handler
     var disabledDays: List<Date>? = null
-    var selectedDays: List<Date>? = null
+    //var selectedDays: List<Date>? = null
+
+    var firstSelectedDays: Date? = null
+    var secondSelectedDays: Date? = null
+
     private lateinit var workerThread: HandlerThread
     private val viewList = ArrayList<DayView>()
 
@@ -45,7 +47,7 @@ class MonthView : FrameLayout {
         init(context, attrs)
     }
 
-    private fun init(context: Context?, attrs: AttributeSet?) {
+    private fun init(context: Context?, @Suppress("UNUSED_PARAMETER") attrs: AttributeSet?) {
         workerThread = HandlerThread("MonthWorker")
         workerThread.start()
         workerHandler = Handler(workerThread.looper)
@@ -85,33 +87,29 @@ class MonthView : FrameLayout {
         monthTable.visibility = View.INVISIBLE
         workerHandler.post {
             val rows = mutableListOf<TableRow>()
-            (0 until nbLines).forEach { l ->
+            (0 until nbLines).forEach {
                 val row = LayoutInflater.from(context).inflate(R.layout.row, monthTable, false) as TableRow
-                (0 until 7).forEach { r ->
-                    //                Log.i(TAG, "[$l,$r] test=${cal.time.fullFormat()}")
+                (0 until 7).forEach {
                     val dayView = DayView(context, cal.time)
                     dayView.selectedColor = selectedColor
                     dayView.disabledColor = disabledColor
-
+                    dayView.displayedInMonth = baseMonth
                     viewList.add(dayView)
 
                     if (cal.get(Calendar.MONTH) == baseMonth) {
                         dayView.setText(cal.time.dayOfMonth())
                         if (disabledDays?.firstOrNull { it.time == cal.time.time } != null && dayView.getText().isNotEmpty()) {
                             dayView.isEnabled = false
-                        } else if (selectedDays?.firstOrNull { it.time == cal.time.time } != null && dayView.getText().isNotEmpty()) {
-                            dayView.isSelected = true
                         }
-                    } else {
-                        dayView.isEnabled = false
+                        dayView.onClickListener { date, view ->
+                            listener?.invoke(date, view)
+                        }
                     }
-                    dayView.onClickListener { date, view ->
-                        listener?.invoke(date, view)
-                    }
-
+                    updateCellState(dayView.date, dayView)
                     row.addView(dayView)
                     cal.add(Calendar.DAY_OF_MONTH, 1)
                 }
+                row.setBackgroundColor(Color.parseColor("#FAFAFA"))
                 rows.add(row)
             }
 
@@ -125,23 +123,76 @@ class MonthView : FrameLayout {
         }
     }
 
+    private fun updateCellState(time: Date?, dayView: DayView) {
+        if (dayView.getText().isNotEmpty()) {
+            when (checkIfDateSelected(time)) {
+                SelectionState.ONLY_ONE_SELECTED -> dayView.setOnlyOneSelected()
+                SelectionState.FIRST_DAY -> dayView.setFirstDay()
+                SelectionState.LAST_DAY -> dayView.setLastDay()
+                SelectionState.DAY_BETWEEN -> dayView.setDayBetween()
+                SelectionState.NOT_SELECTED -> dayView.setNotSelected()
+            }
+        } else if (firstSelectedDays != null && secondSelectedDays !=  null) {
+            val cal = Calendar.getInstance()
+            cal.time = firstSelectedDays
+            val firstDayMonth = cal.get(Calendar.MONTH)
+            cal.time = secondSelectedDays
+            val secondDayMonth = cal.get(Calendar.MONTH)
+            if (firstDayMonth != secondDayMonth && ((dayView.date.after(firstSelectedDays) && dayView.displayedInMonth == firstDayMonth)
+                    || (dayView.date.before(secondSelectedDays) && dayView.displayedInMonth == secondDayMonth)
+                            || (dayView.displayedInMonth > firstDayMonth && dayView.displayedInMonth < secondDayMonth))) {
+                dayView.setDayBetween()
+            } else {
+                dayView.setNotSelected()
+            }
+        } else {
+            dayView.setNotSelected()
+        }
+    }
+
+    private fun checkIfDateSelected(time: Date?): SelectionState {
+        return when {
+            firstSelectedDays == null -> SelectionState.NOT_SELECTED
+            secondSelectedDays == null -> {
+                if (firstSelectedDays == time)
+                    SelectionState.ONLY_ONE_SELECTED
+                else
+                    SelectionState.NOT_SELECTED
+            }
+            time == firstSelectedDays -> SelectionState.FIRST_DAY
+            time == secondSelectedDays -> SelectionState.LAST_DAY
+            else -> {
+                if (time?.after(firstSelectedDays) == true && time.before(secondSelectedDays))
+                    SelectionState.DAY_BETWEEN
+                else
+                    SelectionState.NOT_SELECTED
+            }
+        }
+    }
+
     private fun updateView(dayView: DayView) {
         if (dayView.getText().isNotEmpty()) {
             dayView.isEnabled = disabledDays?.firstOrNull { it.time == dayView.date.time } == null
-            dayView.isSelected = selectedDays?.firstOrNull { it.time == dayView.date.time } != null
         }
+        updateCellState(dayView.date, dayView)
     }
 
     fun setOnClickListener(listener: (Date, View) -> Unit) {
         this.listener = listener
     }
 
-    fun refresh(field: List<Date>?) {
-        selectedDays = field
+    fun refresh(firstSelected: Date?, secondSelected: Date?) {
+        firstSelectedDays = firstSelected
+        secondSelectedDays = secondSelected
         viewList.forEach { updateView(it) }
     }
 }
 
+enum class SelectionState {
+    FIRST_DAY, DAY_BETWEEN, LAST_DAY, ONLY_ONE_SELECTED, NOT_SELECTED
+}
+
+@Suppress("unused")
 fun Date.fullFormat(): String =
         SimpleDateFormat("EEE yyyy-MM-dd 'at' HH:mm:ss z", Locale.getDefault()).format(this)
 

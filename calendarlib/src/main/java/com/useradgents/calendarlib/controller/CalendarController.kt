@@ -27,6 +27,7 @@ class CalendarController constructor(private val calendarView: CalendarViewInter
                  } else {
                      firstDate = date
                      calendarView.onFirstDateSet(date)
+                     calendarView.onUnavailableDate()
                      secondDate = null
                  }
             }

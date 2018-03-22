@@ -1,7 +1,9 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,15 @@ class DayView : FrameLayout {
     lateinit var date: Date
     private var listener: ((Date, View) -> Unit)? = null
     internal var selectedColor: Int = 0
+        set(value) {
+            field = value
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                backgroundTintList = ColorStateList(
+                        arrayOf(EMPTY_STATE_SET),
+                        intArrayOf(field))
+            }
+        }
+    internal var selectedTextColor: Int = 0
     internal var disabledColor: Int = 0
 
     constructor(context: Context?, date: Date) : super(context) {
@@ -63,17 +74,54 @@ class DayView : FrameLayout {
         invalidate()
     }
 
-    override fun setSelected(selected: Boolean) {
-        super.setSelected(selected)
-        if (selected) {
-            setBackgroundColor(selectedColor)
-        } else {
-            setBackgroundColor(Color.TRANSPARENT)
+    fun onClickListener(listener: (Date, View) -> Unit) {
+        this.listener = listener
+    }
+
+    fun setOnlyOneSelected() {
+        isSelected = true
+        if (isEnabled) {
+            setBackgroundResource(R.drawable.single)
+            day.setTextColor(Color.WHITE)
         }
         invalidate()
     }
 
-    fun onClickListener(listener: (Date, View) -> Unit) {
-        this.listener = listener
+    fun setFirstDay() {
+        isSelected = true
+        if (isEnabled) {
+            setBackgroundResource(R.drawable.start)
+            day.setTextColor(Color.WHITE)
+        }
+        invalidate()
     }
+
+    fun setLastDay() {
+        isSelected = true
+        if (isEnabled) {
+            setBackgroundResource(R.drawable.end)
+            day.setTextColor(Color.WHITE)
+        }
+        invalidate()
+    }
+
+    fun setDayBetween() {
+        isSelected = true
+        if (isEnabled) {
+            setBackgroundResource(R.drawable.between)
+            day.setTextColor(Color.WHITE)
+        }
+        invalidate()
+    }
+
+    fun setNotSelected() {
+        isSelected = false
+        if (isEnabled) {
+            setBackgroundColor(Color.TRANSPARENT)
+            day.setTextColor(Color.BLACK)
+        }
+        invalidate()
+    }
+
+    var displayedInMonth: Int = 0
 }
