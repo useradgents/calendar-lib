@@ -69,6 +69,7 @@ class MonthView : FrameLayout {
         cal.add(Calendar.MONTH, month)
 
         baseMonth = cal.get(Calendar.MONTH)
+        val baseYear = cal.get(Calendar.YEAR)
         val nbDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
         monthName.text = cal.time.month()
 
@@ -94,6 +95,7 @@ class MonthView : FrameLayout {
                     dayView.selectedColor = selectedColor
                     dayView.disabledColor = disabledColor
                     dayView.displayedInMonth = baseMonth
+                    dayView.displayedInYear = baseYear
                     viewList.add(dayView)
 
                     if (cal.get(Calendar.MONTH) == baseMonth) {
@@ -136,11 +138,15 @@ class MonthView : FrameLayout {
             val cal = Calendar.getInstance()
             cal.time = firstSelectedDays
             val firstDayMonth = cal.get(Calendar.MONTH)
+            val firstDayYear = cal.get(Calendar.YEAR)
             cal.time = secondSelectedDays
             val secondDayMonth = cal.get(Calendar.MONTH)
+            cal.time = dayView.date
+            val secondDayYear = cal.get(Calendar.YEAR)
             if (firstDayMonth != secondDayMonth && ((dayView.date.after(firstSelectedDays) && dayView.displayedInMonth == firstDayMonth)
                     || (dayView.date.before(secondSelectedDays) && dayView.displayedInMonth == secondDayMonth)
-                            || (dayView.displayedInMonth > firstDayMonth && dayView.displayedInMonth < secondDayMonth))) {
+                            || (dayView.displayedInMonth in (firstDayMonth + 1)..(secondDayMonth - 1))
+                            || (dayView.date.before(secondSelectedDays) && dayView.displayedInYear > firstDayYear))) {
                 dayView.setDayBetween()
             } else {
                 dayView.setNotSelected()

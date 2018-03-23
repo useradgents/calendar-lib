@@ -127,4 +127,5 @@ class DayView : FrameLayout {
     }
 
     var displayedInMonth: Int = 0
+    var displayedInYear: Int = 0
 }
