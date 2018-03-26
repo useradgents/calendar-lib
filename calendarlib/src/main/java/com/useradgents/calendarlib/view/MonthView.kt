@@ -24,6 +24,9 @@ class MonthView : FrameLayout {
     var firstSelectedDays: Date? = null
     var secondSelectedDays: Date? = null
 
+    var min: Date? = null
+    var max: Date? = null
+
     private lateinit var workerThread: HandlerThread
     private val viewList = ArrayList<DayView>()
 
@@ -100,9 +103,20 @@ class MonthView : FrameLayout {
 
                     if (cal.get(Calendar.MONTH) == baseMonth) {
                         dayView.setText(cal.time.dayOfMonth())
-                        if (disabledDays?.firstOrNull { it.time == cal.time.time } != null && dayView.getText().isNotEmpty()) {
+
+                        if (max == null && min != null) {
+                            dayView.isEnabled = cal.time.after(min)
+                        } else if (min == null && max != null) {
+                            dayView.isEnabled = cal.time.before(max)
+                        } else if (min != null && max != null) {
+                            dayView.isEnabled = cal.time.before(max) && cal.time.after(min)
+                        }
+
+                        if (disabledDays?.firstOrNull { it.time == cal.time.time } != null
+                                && dayView.getText().isNotEmpty()) {
                             dayView.isEnabled = false
                         }
+
                         dayView.onClickListener { date, view ->
                             listener?.invoke(date, view)
                         }
@@ -142,7 +156,6 @@ class MonthView : FrameLayout {
             cal.time = secondSelectedDays
             val secondDayMonth = cal.get(Calendar.MONTH)
             cal.time = dayView.date
-            val secondDayYear = cal.get(Calendar.YEAR)
             if (firstDayMonth != secondDayMonth && ((dayView.date.after(firstSelectedDays) && dayView.displayedInMonth == firstDayMonth)
                     || (dayView.date.before(secondSelectedDays) && dayView.displayedInMonth == secondDayMonth)
                             || (dayView.displayedInMonth in (firstDayMonth + 1)..(secondDayMonth - 1))
@@ -177,9 +190,18 @@ class MonthView : FrameLayout {
     }
 
     private fun updateView(dayView: DayView) {
-        if (dayView.getText().isNotEmpty()) {
-            dayView.isEnabled = disabledDays?.firstOrNull { it.time == dayView.date.time } == null
+        if (max == null && min != null) {
+            dayView.isEnabled = dayView.date.after(min)
+        } else if (min == null && max != null) {
+            dayView.isEnabled = dayView.date.before(max)
+        } else if (min != null && max != null) {
+            dayView.isEnabled = dayView.date.before(max) && dayView.date.after(min)
         }
+        if (disabledDays?.firstOrNull { it.time == dayView.date.time } != null
+                && dayView.getText().isNotEmpty()) {
+            dayView.isEnabled = false
+        }
+
         updateCellState(dayView.date, dayView)
     }
 

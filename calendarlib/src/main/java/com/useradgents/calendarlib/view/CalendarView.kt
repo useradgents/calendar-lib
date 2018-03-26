@@ -48,6 +48,17 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             adapter.dateList = listAtSameTime
         }
 
+    var min: Date? = null
+        set (date) {
+            field = date
+            adapter.min = date
+        }
+    var max: Date? = null
+        set (date) {
+            field = date
+            adapter.max = date
+        }
+
     constructor(context: Context?) : super(context) {
         init(context, null)
     }
