@@ -28,9 +28,6 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private lateinit var controller: CalendarController
     private lateinit var adapter: CalendarAdapter
 
-    var firstSelectedDays: Date? = null
-    var secondSelectedDays: Date? = null
-
     private var disabledColor: Int = 0
     private var selectedColor: Int = 0
 

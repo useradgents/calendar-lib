@@ -85,7 +85,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.single)
-            day.setTextColor(Color.WHITE)
+            day.setTextColor(Color.BLACK)
         }
         invalidate()
     }
@@ -94,7 +94,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.start)
-            day.setTextColor(Color.WHITE)
+            day.setTextColor(Color.BLACK)
         }
         invalidate()
     }
@@ -103,7 +103,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.end)
-            day.setTextColor(Color.WHITE)
+            day.setTextColor(Color.BLACK)
         }
         invalidate()
     }
@@ -112,7 +112,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.between)
-            day.setTextColor(Color.WHITE)
+            day.setTextColor(Color.BLACK)
         }
         invalidate()
     }

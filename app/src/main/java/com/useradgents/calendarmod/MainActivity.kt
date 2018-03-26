@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         calendar.setOnUnavailableDate { Toast.makeText (this, "Choisissez un intervalle sans jour indisponilbe, n00b", Toast.LENGTH_LONG).show() }
 
         val cal = Calendar.getInstance()
-        cal.set(2018, 4, 25)
+        cal.set(2018, 2, 30)
         calendar.notAvailableDays = arrayListOf(cal.time)
     }
 }
