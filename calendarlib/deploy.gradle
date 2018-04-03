@@ -5,13 +5,12 @@ repositories {
 }
 
 configurations {
-    deployLibrary
+    deployerJar
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    deployLibrary "ar.com.synergian:wagon-git:0.2.0"
+    deployerJar "ar.com.synergian:wagon-git:0.2.3"
 }
 
 task androidJavadocs(type: Javadoc) {
@@ -58,8 +57,9 @@ task lookForArtifacts {
 uploadArchives.dependsOn lookForArtifacts
 
 uploadArchives {
+    configuration = configurations.archives
     repositories.mavenDeployer {
-        configuration = configurations.deployLibrary
+        configuration = configurations.deployerJar
         repository(url: 'git:releases://git@bitbucket.org:' + COMPANY + '/' + REPOSITORY_NAME + '.git')
 
         uniqueVersion = true
