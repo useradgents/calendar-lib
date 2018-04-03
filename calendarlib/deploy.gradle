@@ -37,7 +37,7 @@ task lookForArtifacts {
     doLast {
         def artifactName = ARTIFACT_NAME + '-' + ARTIFACT_VERSION + '.aar'
         def artifactPath = ARTIFACT_PACKAGE.replace(".", "/") + "/" + ARTIFACT_NAME + "/" + ARTIFACT_VERSION + "/" + artifactName
-        def repositoryUrl = 'https://api.bitbucket.org/2.0/repositories/' + COMPANY + '/' + REPOSITORY_NAME + '/raw/releases/' + artifactPath
+        def repositoryUrl = 'https://api.bitbucket.org/2.0/repositories/' + COMPANY + '/' + REPOSITORY_NAME + "/" + artifactPath
 
         println("")
         println("Checking if artifact already exists: " + artifactName)
@@ -49,6 +49,8 @@ task lookForArtifacts {
 
         if (urlExists(repositoryUrl)) {
             throw new RuntimeException("Artifact with version " + ARTIFACT_VERSION + " already exist - not executing uploadArchives")
+        } else {
+            throw new RuntimeException("Artifact with version " + ARTIFACT_VERSION + " not found")
         }
         return true
     }
