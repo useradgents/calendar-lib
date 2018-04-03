@@ -58,7 +58,6 @@ task lookForArtifacts {
 uploadArchives.dependsOn lookForArtifacts
 
 uploadArchives {
-
     repositories.mavenDeployer {
         configuration = configurations.deployLibrary
         repository(url: 'git:releases://git@bitbucket.org:' + COMPANY + '/' + REPOSITORY_NAME + '.git')
