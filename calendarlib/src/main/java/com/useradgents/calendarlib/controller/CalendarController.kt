@@ -1,15 +1,31 @@
 package com.useradgents.calendarlib.controller
 
-import android.view.View
 import java.util.*
 
 class CalendarController constructor(private val calendarView: CalendarViewInterface) {
-    private var firstDate: Date? = null
-    private var secondDate: Date? = null
+    var firstDate: Date? = null
+        set (date) {
+            field = date
+            date?.let { onDaySet(it) }
+        }
+    var secondDate: Date? = null
+        set (date) {
+            field = date
+            date?.let { onDaySet (it) }
+        }
+
+    private fun onDaySet(date: Date) {
+        if ((firstDate != null && secondDate != null)) {
+            calendarView.onSecondDateSet(firstDate!!, secondDate!!)
+            secondDate = null
+        } else if (firstDate != null && secondDate == null) {
+            calendarView.onFirstDateSet(date)
+        }
+    }
 
     var dateList: List<Date>? = null
 
-    fun onDayClicked(date: Date, view: View) {
+    fun onDayClicked(date: Date) {
         if (firstDate == null || (firstDate != null && secondDate != null)) {
             firstDate = date
             calendarView.onFirstDateSet(date)
@@ -19,17 +35,17 @@ class CalendarController constructor(private val calendarView: CalendarViewInter
                 firstDate = date
                 calendarView.onFirstDateSet(date)
             } else if (date != firstDate) {
-                 if (checkAllDaysBetweenAvailability(firstDate, date)) {
-                     secondDate = date
-                     firstDate?.let {
-                         calendarView.onSecondDateSet(it, date)
-                     }
-                 } else {
-                     firstDate = date
-                     calendarView.onFirstDateSet(date)
-                     calendarView.onUnavailableDate()
-                     secondDate = null
-                 }
+                if (checkAllDaysBetweenAvailability(firstDate, date)) {
+                    secondDate = date
+                    firstDate?.let {
+                        calendarView.onSecondDateSet(it, date)
+                    }
+                } else {
+                    firstDate = date
+                    calendarView.onFirstDateSet(date)
+                    calendarView.onUnavailableDate()
+                    secondDate = null
+                }
             }
         }
     }

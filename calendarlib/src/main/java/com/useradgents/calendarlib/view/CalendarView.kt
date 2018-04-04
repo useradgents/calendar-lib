@@ -32,7 +32,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private var selectedColor: Int = 0
 
 
-    var notAvailableDays: List<Date> ?= null
+    var notAvailableDays: List<Date>? = null
         set(list) {
             val listAtSameTime = list?.map {
                 val cal = Calendar.getInstance()       // get calendar instance
@@ -57,6 +57,24 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         set (date) {
             field = date
             adapter.max = date
+        }
+
+    var selectedDates: Pair<Date, Date>? = null
+        set (date) {
+            val cal = Calendar.getInstance()
+            cal.time = date?.first
+            cal.set(Calendar.HOUR_OF_DAY, 10)            // set hour to midnight
+            cal.set(Calendar.MINUTE, 0)                 // set minute in hour
+            cal.set(Calendar.SECOND, 0)                 // set second in minute
+            cal.set(Calendar.MILLISECOND, 0)
+            controller.firstDate = cal.time
+
+            cal.time = date?.second
+            cal.set(Calendar.HOUR_OF_DAY, 10)            // set hour to midnight
+            cal.set(Calendar.MINUTE, 0)                 // set minute in hour
+            cal.set(Calendar.SECOND, 0)                 // set second in minute
+            cal.set(Calendar.MILLISECOND, 0)
+            controller.secondDate = cal.time
         }
 
     constructor(context: Context?) : super(context) {
@@ -84,7 +102,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         selectedColor = fetchAccentColor(attrs)
 
         val linearManager = LinearLayoutManager(context)
-        adapter = CalendarAdapter({ date, day -> controller.onDayClicked(date, day) }, selectedColor, disabledColor)
+        adapter = CalendarAdapter({ date, _ -> controller.onDayClicked(date) }, selectedColor, disabledColor)
 
         val dividerItemDecoration = DividerItemDecoration(context,
                 linearManager.orientation)
