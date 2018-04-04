@@ -37,6 +37,8 @@ class CalendarController constructor(private val calendarView: CalendarViewInter
     private fun checkAllDaysBetweenAvailability(firstDate: Date?, secondDate: Date?): Boolean {
         if (firstDate == null || secondDate == null) {
             return false
+        } else if (dateList == null || dateList?.isEmpty() == true) {
+            return true
         }
         return dateList?.none { it == firstDate || it == secondDate || (it.after(firstDate) && it.before(secondDate)) } == true
     }
