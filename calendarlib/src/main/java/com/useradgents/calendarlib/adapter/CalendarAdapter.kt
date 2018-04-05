@@ -12,7 +12,10 @@ class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null, private val 
     var dateList: List<Date>? = null
         set(list) {
             field = list
-            notifyDataSetChanged()
+            viewList.forEach {
+                it.disabledDays = list
+                it.refresh(firstSelectedDays, secondSelectedDays)
+            }
         }
 
     var min: Date? = null

@@ -3,23 +3,19 @@ package com.useradgents.calendarlib.controller
 import java.util.*
 
 class CalendarController constructor(private val calendarView: CalendarViewInterface) {
-    var firstDate: Date? = null
-        set (date) {
-            field = date
-            date?.let { onDaySet(it) }
-        }
-    var secondDate: Date? = null
-        set (date) {
-            field = date
-            date?.let { onDaySet (it) }
-        }
+    private var firstDate: Date? = null
+    private var secondDate: Date? = null
 
-    private fun onDaySet(date: Date) {
-        if ((firstDate != null && secondDate != null)) {
-            calendarView.onSecondDateSet(firstDate!!, secondDate!!)
+    fun setSelectedDates(dates: Pair<Date?, Date?>) {
+        let { onDaySet (dates) }
+    }
+
+    private fun onDaySet(dates: Pair<Date?, Date?>) {
+        if ((dates.first != null && dates.second != null)) {
+            calendarView.onSecondDateSet(dates.first!!, dates.second!!)
             secondDate = null
-        } else if (firstDate != null && secondDate == null) {
-            calendarView.onFirstDateSet(date)
+        } else if (dates.first != null && dates.second == null) {
+            calendarView.onFirstDateSet(dates.first!!)
         }
     }
 

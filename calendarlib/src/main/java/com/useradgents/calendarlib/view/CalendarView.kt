@@ -59,7 +59,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             adapter.max = date
         }
 
-    var selectedDates: Pair<Date, Date>? = null
+    var selectedDates: Pair<Date?, Date?>? = null
         set (date) {
             val cal = Calendar.getInstance()
             cal.time = date?.first
@@ -67,14 +67,16 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             cal.set(Calendar.MINUTE, 0)                 // set minute in hour
             cal.set(Calendar.SECOND, 0)                 // set second in minute
             cal.set(Calendar.MILLISECOND, 0)
-            controller.firstDate = cal.time
+            val firstDate = cal.time
 
             cal.time = date?.second
             cal.set(Calendar.HOUR_OF_DAY, 10)            // set hour to midnight
             cal.set(Calendar.MINUTE, 0)                 // set minute in hour
             cal.set(Calendar.SECOND, 0)                 // set second in minute
             cal.set(Calendar.MILLISECOND, 0)
-            controller.secondDate = cal.time
+            val secondDate = cal.time
+
+            controller.setSelectedDates(firstDate to secondDate)
         }
 
     constructor(context: Context?) : super(context) {

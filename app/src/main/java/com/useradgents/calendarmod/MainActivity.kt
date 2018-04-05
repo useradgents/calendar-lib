@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val first = cal.time
         cal.set(2018, 3, 19)
         val second = cal.time
-//        calendar.notAvailableDays = arrayListOf(cal.time)
+        calendar.notAvailableDays = arrayListOf(cal.time)
 //        cal.set(2018, 2, 15)
 //        val min = cal.time
 //        calendar.min = min
