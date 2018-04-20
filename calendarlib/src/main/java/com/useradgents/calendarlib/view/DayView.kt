@@ -1,29 +1,36 @@
 package com.useradgents.calendarlib.view
-
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
+import android.support.v4.view.ViewCompat
+import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
-import android.view.LayoutInflater
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import com.useradgents.calendarlib.R
-import kotlinx.android.synthetic.main.day.view.*
 import java.util.*
 
 
-class DayView : FrameLayout {
+
+
+class DayView : AppCompatTextView {
 
     lateinit var date: Date
     private var listener: ((Date, View) -> Unit)? = null
+    private var tint: ColorStateList? = null
+
     internal var selectedColor: Int = 0
         set(value) {
             field = value
+            tint = ColorStateList(
+                    arrayOf(EMPTY_STATE_SET),
+                    intArrayOf(field))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                backgroundTintList = ColorStateList(
-                        arrayOf(EMPTY_STATE_SET),
-                        intArrayOf(field))
+                backgroundTintList = tint
+            } else {
+                ViewCompat.setBackgroundTintList(this, tint)
             }
         }
     internal var selectedTextColor: Int = 0
@@ -47,32 +54,56 @@ class DayView : FrameLayout {
     }
 
     private fun init(context: Context?, attrs: AttributeSet?) {
-        LayoutInflater.from(context).inflate(R.layout.day, this, true)
         val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.DayView, 0, 0)
         try {
             val label = a?.getString(R.styleable.DayView_day_text)
-            day.text = label
+            text = label
         } finally {
             a?.recycle()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             elevation = 5F
         }
+        gravity = Gravity.CENTER
         setOnClickListener { listener?.invoke(date, this) }
     }
 
-    fun setText(s: String) {
-        day.text = s
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val r = resources
+        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42f, r.displayMetrics)
+        setMeasuredDimension(getMeasurement(widthMeasureSpec, px.toInt()),
+                getMeasurement(heightMeasureSpec, px.toInt()))
     }
 
-    fun getText(): CharSequence = day.text
+    private fun getMeasurement(measureSpec: Int, preferred: Int): Int {
+        val specSize = MeasureSpec.getSize (measureSpec)
+
+        return when (MeasureSpec.getMode(measureSpec)) {
+            MeasureSpec.EXACTLY ->
+                // This means the width of this view has been given.
+                specSize
+            MeasureSpec.AT_MOST ->
+                // Take the minimum of the preferred size and what
+                // we were told to be.
+                Math.min(preferred, specSize)
+            MeasureSpec.UNSPECIFIED -> preferred
+            else -> preferred
+        }
+    }
+
+    fun setText(s: String) {
+        text = s
+    }
+
+//    fun getText(): CharSequence = text
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         if (enabled) {
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         } else {
-            day.setTextColor(disabledColor)
+            (disabledColor)
         }
         invalidate()
     }
@@ -85,7 +116,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.single)
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         }
         invalidate()
     }
@@ -94,7 +125,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.start)
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         }
         invalidate()
     }
@@ -103,7 +134,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.end)
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         }
         invalidate()
     }
@@ -112,7 +143,7 @@ class DayView : FrameLayout {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.between)
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         }
         invalidate()
     }
@@ -121,7 +152,7 @@ class DayView : FrameLayout {
         isSelected = false
         if (isEnabled) {
             setBackgroundColor(Color.TRANSPARENT)
-            day.setTextColor(Color.BLACK)
+            (Color.BLACK)
         }
         invalidate()
     }

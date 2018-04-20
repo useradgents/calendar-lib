@@ -1,7 +1,6 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -49,6 +48,7 @@ class MonthView : FrameLayout {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs)
     }
+
 
     private fun init(context: Context?, @Suppress("UNUSED_PARAMETER") attrs: AttributeSet?) {
         workerThread = HandlerThread("MonthWorker")
@@ -125,7 +125,6 @@ class MonthView : FrameLayout {
                     row.addView(dayView)
                     cal.add(Calendar.DAY_OF_MONTH, 1)
                 }
-                row.setBackgroundColor(Color.parseColor("#FAFAFA"))
                 rows.add(row)
             }
 
@@ -140,7 +139,7 @@ class MonthView : FrameLayout {
     }
 
     private fun updateCellState(time: Date?, dayView: DayView) {
-        if (dayView.getText().isNotEmpty()) {
+        if (dayView.text.isNotEmpty()) {
             when (checkIfDateSelected(time)) {
                 SelectionState.ONLY_ONE_SELECTED -> dayView.setOnlyOneSelected()
                 SelectionState.FIRST_DAY -> dayView.setFirstDay()
@@ -148,7 +147,7 @@ class MonthView : FrameLayout {
                 SelectionState.DAY_BETWEEN -> dayView.setDayBetween()
                 SelectionState.NOT_SELECTED -> dayView.setNotSelected()
             }
-        } else if (firstSelectedDays != null && secondSelectedDays !=  null) {
+        } else if (firstSelectedDays != null && secondSelectedDays != null) {
             val cal = Calendar.getInstance()
             cal.time = firstSelectedDays
             val firstDayMonth = cal.get(Calendar.MONTH)
@@ -157,7 +156,7 @@ class MonthView : FrameLayout {
             val secondDayMonth = cal.get(Calendar.MONTH)
             cal.time = dayView.date
             if (firstDayMonth != secondDayMonth && ((dayView.date.after(firstSelectedDays) && dayView.displayedInMonth == firstDayMonth)
-                    || (dayView.date.before(secondSelectedDays) && dayView.displayedInMonth == secondDayMonth)
+                            || (dayView.date.before(secondSelectedDays) && dayView.displayedInMonth == secondDayMonth)
                             || (dayView.displayedInMonth in (firstDayMonth + 1)..(secondDayMonth - 1))
                             || (dayView.date.before(secondSelectedDays) && dayView.displayedInYear > firstDayYear))) {
                 dayView.setDayBetween()
