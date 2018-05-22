@@ -36,6 +36,7 @@ class MonthView : FrameLayout {
 
     var selectedColor: Int = 0
     var disabledColor: Int = 0
+    var selectedTextColor: Int = 0
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -97,6 +98,7 @@ class MonthView : FrameLayout {
                     val dayView = DayView(context, cal.time)
                     dayView.selectedColor = selectedColor
                     dayView.disabledColor = disabledColor
+                    dayView.selectedTextColor = selectedTextColor
                     dayView.displayedInMonth = baseMonth
                     dayView.displayedInYear = baseYear
                     viewList.add(dayView)

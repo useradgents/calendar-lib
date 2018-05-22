@@ -5,7 +5,8 @@
     </declare-styleable>
 
     <declare-styleable name="CalendarView">
-        <attr name="selected_color"/>
-        <attr name="disabled_color"/>
+        <attr name="selected_color" />
+        <attr name="disabled_color" />
+        <attr name="selected_text_color" />
     </declare-styleable>
 </resources>

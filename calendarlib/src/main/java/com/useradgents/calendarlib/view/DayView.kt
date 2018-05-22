@@ -1,4 +1,5 @@
 package com.useradgents.calendarlib.view
+
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -11,8 +12,6 @@ import android.view.Gravity
 import android.view.View
 import com.useradgents.calendarlib.R
 import java.util.*
-
-
 
 
 class DayView : AppCompatTextView {
@@ -34,6 +33,7 @@ class DayView : AppCompatTextView {
             }
         }
     internal var selectedTextColor: Int = 0
+    internal var textColor: Int = Color.BLACK
     internal var disabledColor: Int = 0
 
     constructor(context: Context?, date: Date) : super(context) {
@@ -77,7 +77,7 @@ class DayView : AppCompatTextView {
     }
 
     private fun getMeasurement(measureSpec: Int, preferred: Int): Int {
-        val specSize = MeasureSpec.getSize (measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
 
         return when (MeasureSpec.getMode(measureSpec)) {
             MeasureSpec.EXACTLY ->
@@ -101,9 +101,9 @@ class DayView : AppCompatTextView {
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         if (enabled) {
-            (Color.BLACK)
+            setTextColor(textColor)
         } else {
-            (disabledColor)
+            setTextColor(disabledColor)
         }
         invalidate()
     }
@@ -116,7 +116,7 @@ class DayView : AppCompatTextView {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.single)
-            (Color.BLACK)
+            setTextColor(selectedTextColor)
         }
         invalidate()
     }
@@ -125,7 +125,7 @@ class DayView : AppCompatTextView {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.start)
-            (Color.BLACK)
+            setTextColor(selectedTextColor)
         }
         invalidate()
     }
@@ -134,7 +134,7 @@ class DayView : AppCompatTextView {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.end)
-            (Color.BLACK)
+            setTextColor(selectedTextColor)
         }
         invalidate()
     }
@@ -143,7 +143,7 @@ class DayView : AppCompatTextView {
         isSelected = true
         if (isEnabled) {
             setBackgroundResource(R.drawable.between)
-            (Color.BLACK)
+            setTextColor(selectedTextColor)
         }
         invalidate()
     }
@@ -152,7 +152,7 @@ class DayView : AppCompatTextView {
         isSelected = false
         if (isEnabled) {
             setBackgroundColor(Color.TRANSPARENT)
-            (Color.BLACK)
+            setTextColor(textColor)
         }
         invalidate()
     }

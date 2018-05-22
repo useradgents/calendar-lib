@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
-        app:selected_color="#D2D502"/>
+        app:selected_color="#D2D502"
+        app:selected_text_color="#FFFFFF"/>
 
 </android.support.constraint.ConstraintLayout>

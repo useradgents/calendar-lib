@@ -30,6 +30,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
 
     private var disabledColor: Int = 0
     private var selectedColor: Int = 0
+    private var selectedTextColor: Int = 0
 
 
     var notAvailableDays: List<Date>? = null
@@ -98,13 +99,14 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.CalendarView, 0, 0)
         try {
             disabledColor = a?.getColor(R.styleable.CalendarView_disabled_color, Color.parseColor("#55555555")) ?: Color.parseColor("#55555555")
+            selectedTextColor = a?.getColor(R.styleable.CalendarView_selected_text_color, Color.parseColor("#FF000000")) ?: Color.parseColor("#FF000000")
         } finally {
             a?.recycle()
         }
         selectedColor = fetchAccentColor(attrs)
 
         val linearManager = LinearLayoutManager(context)
-        adapter = CalendarAdapter({ date, _ -> controller.onDayClicked(date) }, selectedColor, disabledColor)
+        adapter = CalendarAdapter({ date, _ -> controller.onDayClicked(date) }, selectedColor, disabledColor, selectedTextColor)
 
         val dividerItemDecoration = DividerItemDecoration(context,
                 linearManager.orientation)

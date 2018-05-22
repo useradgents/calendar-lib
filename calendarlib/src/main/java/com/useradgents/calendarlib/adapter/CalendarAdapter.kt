@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.useradgents.calendarlib.view.MonthView
 import java.util.*
 
-class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null, private val selectedColor: Int, private val disabledColor: Int) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
+class CalendarAdapter(val listener: ((Date, Any) -> Unit)? = null, private val selectedColor: Int, private val disabledColor: Int, private val selectedTextColor: Int) : RecyclerView.Adapter<CalendarAdapter.GenericViewHolder>() {
     var items = mutableListOf<Int>()
 
     var dateList: List<Date>? = null
@@ -43,6 +43,7 @@ class CalendarAdapter(val listener: ((Date, View) -> Unit)? = null, private val 
         val view = MonthView(parent?.context)
         view.selectedColor = selectedColor
         view.disabledColor = disabledColor
+        view.selectedTextColor = selectedTextColor
 
         viewList.add(view)
         return CalendarViewHolder(view)
