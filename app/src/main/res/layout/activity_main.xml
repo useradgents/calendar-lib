@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.useradgents.calendarmod.MainActivity">
 
     <com.useradgents.calendarlib.view.CalendarView
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="32dp"
         android:paddingEnd="32dp"
+        android:paddingStart="32dp"
+        app:nb_month="6"
         app:selected_color="#D2D502"
-        app:selected_text_color="#FFFFFF"/>
+        app:selected_text_color="#FFFFFF" />
 
 </android.support.constraint.ConstraintLayout>

@@ -28,6 +28,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private lateinit var controller: CalendarController
     private lateinit var adapter: CalendarAdapter
 
+    private var nbMonth: Int = -1
     private var disabledColor: Int = 0
     private var selectedColor: Int = 0
     private var selectedTextColor: Int = 0
@@ -98,6 +99,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         LayoutInflater.from(context).inflate(R.layout.calendar, this, true)
         val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.CalendarView, 0, 0)
         try {
+            nbMonth = a?.getInteger(R.styleable.CalendarView_nb_month, NUMBER_OF_MONTHS) ?: NUMBER_OF_MONTHS
             disabledColor = a?.getColor(R.styleable.CalendarView_disabled_color, Color.parseColor("#55555555")) ?: Color.parseColor("#55555555")
             selectedTextColor = a?.getColor(R.styleable.CalendarView_selected_text_color, Color.parseColor("#FF000000")) ?: Color.parseColor("#FF000000")
         } finally {
@@ -111,7 +113,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         val dividerItemDecoration = DividerItemDecoration(context,
                 linearManager.orientation)
 
-        adapter.items = (0 until NUMBER_OF_MONTHS).toMutableList()
+        adapter.items = (0 until nbMonth).toMutableList()
         calendarRecyclerView.layoutManager = linearManager
         calendarRecyclerView.adapter = adapter
         calendarRecyclerView.addItemDecoration(dividerItemDecoration)
