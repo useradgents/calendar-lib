@@ -9,5 +9,9 @@
         <attr name="selected_color" />
         <attr name="disabled_color" />
         <attr name="selected_text_color" />
+        <attr name="cv_pick_mode" format="enum">
+            <enum name="RANGE" value="0" />
+            <enum name="SINGLE" value="1" />
+        </attr>
     </declare-styleable>
 </resources>

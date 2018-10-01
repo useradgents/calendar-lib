@@ -2,12 +2,12 @@ package com.useradgents.calendarlib.controller
 
 import java.util.*
 
-class CalendarController constructor(private val calendarView: CalendarViewInterface) {
+class CalendarController constructor(private val calendarView: CalendarViewInterface) : CalendarControllerInterface {
     private var firstDate: Date? = null
     private var secondDate: Date? = null
 
-    fun setSelectedDates(dates: Pair<Date?, Date?>) {
-        let { onDaySet (dates) }
+    override fun setSelectedDates(dates: Pair<Date?, Date?>) {
+        let { onDaySet(dates) }
     }
 
     private fun onDaySet(dates: Pair<Date?, Date?>) {
@@ -19,9 +19,9 @@ class CalendarController constructor(private val calendarView: CalendarViewInter
         }
     }
 
-    var dateList: List<Date>? = null
+    override var dateList: List<Date>? = null
 
-    fun onDayClicked(date: Date) {
+    override fun onDayClicked(date: Date) {
         if (firstDate == null || (firstDate != null && secondDate != null)) {
             firstDate = date
             calendarView.onFirstDateSet(date)

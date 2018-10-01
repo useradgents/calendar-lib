@@ -11,6 +11,8 @@ import android.widget.FrameLayout
 import com.useradgents.calendarlib.R
 import com.useradgents.calendarlib.adapter.CalendarAdapter
 import com.useradgents.calendarlib.controller.CalendarController
+import com.useradgents.calendarlib.controller.CalendarControllerInterface
+import com.useradgents.calendarlib.controller.CalendarSingleController
 import com.useradgents.calendarlib.controller.CalendarViewInterface
 import kotlinx.android.synthetic.main.calendar.view.*
 import java.util.*
@@ -25,7 +27,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private var onDateSelectedListener: ((Date) -> Unit)? = null
     private var onRangeSelectedListener: ((Date, Date) -> Unit)? = null
     private var onUnavailableDate: (() -> Unit)? = null
-    private lateinit var controller: CalendarController
+    private lateinit var controller: CalendarControllerInterface
     private lateinit var adapter: CalendarAdapter
 
     private var nbMonth: Int = -1
@@ -94,14 +96,18 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     }
 
     private fun init(context: Context?, attrs: AttributeSet?) {
-        controller = CalendarController(this)
-
         LayoutInflater.from(context).inflate(R.layout.calendar, this, true)
         val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.CalendarView, 0, 0)
         try {
             nbMonth = a?.getInteger(R.styleable.CalendarView_nb_month, NUMBER_OF_MONTHS) ?: NUMBER_OF_MONTHS
             disabledColor = a?.getColor(R.styleable.CalendarView_disabled_color, Color.parseColor("#55555555")) ?: Color.parseColor("#55555555")
             selectedTextColor = a?.getColor(R.styleable.CalendarView_selected_text_color, Color.parseColor("#FF000000")) ?: Color.parseColor("#FF000000")
+            val mode = a?.getInt(R.styleable.CalendarView_cv_pick_mode, 0)
+            controller = if (mode == 0) {
+                CalendarController(this)
+            } else {
+                CalendarSingleController(this)
+            }
         } finally {
             a?.recycle()
         }
