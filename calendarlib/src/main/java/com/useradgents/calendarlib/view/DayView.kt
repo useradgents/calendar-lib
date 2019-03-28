@@ -3,6 +3,7 @@ package com.useradgents.calendarlib.view
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatTextView
@@ -35,9 +36,14 @@ class DayView : AppCompatTextView {
     internal var selectedTextColor: Int = 0
     internal var textColor: Int = Color.BLACK
     internal var disabledColor: Int = 0
+    internal var isToday: Boolean = false
 
     constructor(context: Context?, date: Date) : super(context) {
         this.date = Date(date.time)
+        val today = Calendar.getInstance()
+        val cal = Calendar.getInstance()
+        cal.time = date
+        isToday = today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)
         init(context, null)
     }
 
@@ -93,6 +99,7 @@ class DayView : AppCompatTextView {
     }
 
     fun setText(s: String) {
+        setTypeface(null, if (isToday) Typeface.BOLD else Typeface.NORMAL)
         text = s
     }
 

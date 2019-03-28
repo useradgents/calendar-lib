@@ -35,12 +35,12 @@ class CalendarAdapter(val listener: ((Date, Any) -> Unit)? = null, private val s
 
     private val viewList = ArrayList<MonthView>()
 
-    override fun onBindViewHolder(holder: GenericViewHolder?, position: Int) {
-        holder?.bind(items[position])
+    override fun onBindViewHolder(holder: GenericViewHolder, position: Int) {
+        holder.bind(items[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GenericViewHolder? {
-        val view = MonthView(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder {
+        val view = MonthView(parent.context)
         view.selectedColor = selectedColor
         view.disabledColor = disabledColor
         view.selectedTextColor = selectedTextColor

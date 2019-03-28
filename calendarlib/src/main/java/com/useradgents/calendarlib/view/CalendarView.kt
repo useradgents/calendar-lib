@@ -81,17 +81,18 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             val secondDate = cal.time
 
             controller.setSelectedDates(firstDate to secondDate)
+            field = date
         }
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
         init(context, null)
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         init(context, attrs)
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs)
     }
 
