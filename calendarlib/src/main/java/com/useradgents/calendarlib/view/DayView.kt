@@ -12,6 +12,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import com.useradgents.calendarlib.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -166,4 +167,12 @@ class DayView : AppCompatTextView {
 
     var displayedInMonth: Int = 0
     var displayedInYear: Int = 0
+}
+
+fun Date.noChangeFormatFull(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
+    val originalDate = this
+    val calender = Calendar.getInstance()
+    calender.time = originalDate
+    return sdf.format(calender.time)
 }

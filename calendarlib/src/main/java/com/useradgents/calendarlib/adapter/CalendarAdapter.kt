@@ -25,7 +25,7 @@ class CalendarAdapter(val listener: ((Date, Any) -> Unit)? = null, private val s
         }
 
     var max: Date? = null
-        set (date) {
+        set(date) {
             field = date
             notifyDataSetChanged()
         }

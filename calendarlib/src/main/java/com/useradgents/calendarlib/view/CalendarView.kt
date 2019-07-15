@@ -53,18 +53,18 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         }
 
     var min: Date? = null
-        set (date) {
+        set(date) {
             field = date
             adapter.min = date
         }
     var max: Date? = null
-        set (date) {
+        set(date) {
             field = date
             adapter.max = date
         }
 
     var selectedDates: Pair<Date?, Date?>? = null
-        set (date) {
+        set(date) {
             val cal = Calendar.getInstance()
             cal.time = date?.first
             cal.set(Calendar.HOUR_OF_DAY, 10)            // set hour to midnight

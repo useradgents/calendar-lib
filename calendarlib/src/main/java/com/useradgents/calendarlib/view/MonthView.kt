@@ -179,8 +179,9 @@ class MonthView : FrameLayout {
                 else
                     SelectionState.NOT_SELECTED
             }
-            time == firstSelectedDays -> SelectionState.FIRST_DAY
-            time == secondSelectedDays -> SelectionState.LAST_DAY
+            time == firstSelectedDays && time != secondSelectedDays -> SelectionState.FIRST_DAY
+            time != firstSelectedDays && time == secondSelectedDays -> SelectionState.LAST_DAY
+            time == firstSelectedDays && time == secondSelectedDays -> SelectionState.ONLY_ONE_SELECTED
             else -> {
                 if (time?.after(firstSelectedDays) == true && time.before(secondSelectedDays))
                     SelectionState.DAY_BETWEEN

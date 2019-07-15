@@ -30,7 +30,7 @@ class CalendarController constructor(private val calendarView: CalendarViewInter
             if (date.before(firstDate)) {
                 firstDate = date
                 calendarView.onFirstDateSet(date)
-            } else if (date != firstDate) {
+            } else {
                 if (checkAllDaysBetweenAvailability(firstDate, date)) {
                     secondDate = date
                     firstDate?.let {
