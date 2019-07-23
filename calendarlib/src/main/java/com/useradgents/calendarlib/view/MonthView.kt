@@ -107,16 +107,16 @@ class MonthView : FrameLayout {
                         dayView.setText(cal.time.dayOfMonth())
 
                         if (max == null && min != null) {
-                            dayView.isEnabled = cal.time.after(min)
+                            uiHandler.post { dayView.isEnabled = cal.time.after(min) }
                         } else if (min == null && max != null) {
-                            dayView.isEnabled = cal.time.before(max)
+                            uiHandler.post { dayView.isEnabled = cal.time.before(max) }
                         } else if (min != null && max != null) {
-                            dayView.isEnabled = cal.time.before(max) && cal.time.after(min)
+                            uiHandler.post { dayView.isEnabled = cal.time.before(max) && cal.time.after(min) }
                         }
 
                         if (disabledDays?.firstOrNull { it.time == cal.time.time } != null
-                                && dayView.getText().isNotEmpty()) {
-                            dayView.isEnabled = false
+                                && dayView.text.isNotEmpty()) {
+                            uiHandler.post { dayView.isEnabled = false }
                         }
 
                         dayView.onClickListener { date, view ->
