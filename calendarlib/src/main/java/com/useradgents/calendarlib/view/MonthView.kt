@@ -8,9 +8,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TableLayout
 import android.widget.TableRow
+import android.widget.TextView
 import com.useradgents.calendarlib.R
-import kotlinx.android.synthetic.main.month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -75,7 +76,7 @@ class MonthView : FrameLayout {
         baseMonth = cal.get(Calendar.MONTH)
         val baseYear = cal.get(Calendar.YEAR)
         val nbDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        monthName.text = cal.time.month()
+        findViewById<TextView>(R.id.monthName).text = cal.time.month()
 
         var dayOffset = 0
         while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
@@ -83,11 +84,13 @@ class MonthView : FrameLayout {
             cal.add(Calendar.DAY_OF_MONTH, -1)
         }
 
+        val monthTable = findViewById<TableLayout>(R.id.monthTable)
         monthTable.removeAllViews()
         viewList.clear()
         val nbLines = ((nbDayOfMonth + dayOffset) / 7) + if ((nbDayOfMonth + dayOffset) % 7 == 0) 0 else 1
         workerHandler.removeCallbacksAndMessages(null)
         uiHandler.removeCallbacksAndMessages(null)
+        val progressBar = findViewById<View>(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
         monthTable.visibility = View.INVISIBLE
         workerHandler.post {

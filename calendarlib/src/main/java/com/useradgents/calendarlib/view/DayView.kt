@@ -5,12 +5,12 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.ViewCompat
 import com.useradgents.calendarlib.R
 import java.text.SimpleDateFormat
 import java.util.*

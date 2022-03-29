@@ -1,9 +1,9 @@
 package com.useradgents.calendarmod
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
+import com.useradgents.calendarlib.view.CalendarView
 import timber.log.Timber
 import java.util.*
 
@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
 
+        val calendar  = findViewById<CalendarView>(R.id.calendar)
         calendar.setOnRangeSelectedListener { first, second ->
             Timber.e("on range selected: $first, $second")
             Toast.makeText(this, "ewi $first, enon: $second", Toast.LENGTH_LONG).show()

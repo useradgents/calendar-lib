@@ -2,19 +2,19 @@ package com.useradgents.calendarlib.view
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.useradgents.calendarlib.R
 import com.useradgents.calendarlib.adapter.CalendarAdapter
 import com.useradgents.calendarlib.controller.CalendarController
 import com.useradgents.calendarlib.controller.CalendarControllerInterface
 import com.useradgents.calendarlib.controller.CalendarSingleController
 import com.useradgents.calendarlib.controller.CalendarViewInterface
-import kotlinx.android.synthetic.main.calendar.view.*
 import java.util.*
 
 
@@ -121,9 +121,12 @@ class CalendarView : FrameLayout, CalendarViewInterface {
                 linearManager.orientation)
 
         adapter.items = (0 until nbMonth).toMutableList()
-        calendarRecyclerView.layoutManager = linearManager
-        calendarRecyclerView.adapter = adapter
-        calendarRecyclerView.addItemDecoration(dividerItemDecoration)
+        findViewById<RecyclerView>(R.id.calendarRecyclerView).apply {
+            layoutManager = linearManager
+            adapter = adapter
+            addItemDecoration(dividerItemDecoration)
+        }
+
     }
 
     fun setOnDateSelectedListener(listener: ((Date) -> Unit)?) {

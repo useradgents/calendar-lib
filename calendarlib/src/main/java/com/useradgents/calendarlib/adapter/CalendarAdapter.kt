@@ -1,8 +1,9 @@
 package com.useradgents.calendarlib.adapter
 
-import android.support.v7.widget.RecyclerView
+
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.useradgents.calendarlib.view.MonthView
 import java.util.*
 

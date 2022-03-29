@@ -6,9 +6,9 @@
 
     <declare-styleable name="CalendarView">
         <attr name="nb_month" format="integer" />
-        <attr name="selected_color" />
-        <attr name="disabled_color" />
-        <attr name="selected_text_color" />
+        <attr name="selected_color" format="color"/>
+        <attr name="disabled_color" format="color" />
+        <attr name="selected_text_color" format="color" />
         <attr name="cv_pick_mode" format="enum">
             <enum name="RANGE" value="0" />
             <enum name="SINGLE" value="1" />
