@@ -6,7 +6,7 @@ plugins {
 
 
 group="com.github.useradgents"
-version="1.1.16"
+version="1.2.2"
 
 
 android {

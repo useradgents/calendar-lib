@@ -123,7 +123,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         adapter.items = (0 until nbMonth).toMutableList()
         findViewById<RecyclerView>(R.id.calendarRecyclerView).apply {
             layoutManager = linearManager
-            adapter = adapter
+            adapter = this@CalendarView.adapter
             addItemDecoration(dividerItemDecoration)
         }
 
