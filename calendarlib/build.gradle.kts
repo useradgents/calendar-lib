@@ -6,7 +6,7 @@ plugins {
 
 
 group="com.github.useradgents"
-version="1.2.2"
+version="1.3.0"
 
 
 android {
@@ -59,4 +59,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.recyclerview:recyclerview:1.0.0")
     api("com.jakewharton.timber:timber:5.0.1")
+    testImplementation("junit:junit:4.12")
 }

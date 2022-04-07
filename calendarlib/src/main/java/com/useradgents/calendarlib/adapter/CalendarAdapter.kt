@@ -66,7 +66,7 @@ class CalendarAdapter(val listener: ((Date, Any) -> Unit)? = null, private val s
                     itemView.disabledDays = dateList
                     itemView.firstSelectedDays = firstSelectedDays
                     itemView.secondSelectedDays = secondSelectedDays
-                    itemView.setDeltaMonth(month)
+                    itemView.setDeltaMonth(min, month)
                     itemView.setOnClickListener { date, day -> listener?.invoke(date, day) }
 
                 }

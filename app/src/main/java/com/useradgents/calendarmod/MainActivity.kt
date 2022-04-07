@@ -24,19 +24,15 @@ class MainActivity : AppCompatActivity() {
             Timber.e("on setOnUnavailableDate")
             Toast.makeText(this, "Choisissez un intervalle sans jour indisponilbe, n00b", Toast.LENGTH_LONG).show()
         }
-
         val cal = Calendar.getInstance()
-        cal.set(2019, 6, 18)
-        val first = cal.time
-        cal.set(2019, 6, 18)
-        val second = cal.time
-//        calendar.notAvailableDays = arrayListOf(cal.time)
-//        cal.set(2018, 2, 15)
-//        val min = cal.time
-//        calendar.min = min
-//        cal.set(2018, 3, 15)
-//        val max = cal.time
-//        calendar.max = max
-//        calendar.selectedDates = first to second
+        val fromDate = cal.time
+        cal.add(Calendar.MONTH, 3)
+        val toDate = cal.time
+        calendar.selectedDates = fromDate to toDate
+
+          calendar.max = Calendar.getInstance().apply {
+              add(Calendar.MONTH, calendar.nbMonthInFuture)
+          }.time
+
     }
 }

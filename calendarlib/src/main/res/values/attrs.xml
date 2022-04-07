@@ -5,7 +5,8 @@
     </declare-styleable>
 
     <declare-styleable name="CalendarView">
-        <attr name="nb_month" format="integer" />
+        <attr name="nb_month_in_future" format="integer" />
+        <attr name="nb_month_in_past" format="integer" />
         <attr name="selected_color" format="color"/>
         <attr name="disabled_color" format="color" />
         <attr name="selected_text_color" format="color" />

@@ -30,7 +30,8 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private lateinit var controller: CalendarControllerInterface
     private lateinit var adapter: CalendarAdapter
 
-    private var nbMonth: Int = -1
+    var nbMonthInFuture: Int = -1
+    private var nbMonthInPast: Int = -1
     private var disabledColor: Int = 0
     private var selectedColor: Int = 0
     private var selectedTextColor: Int = 0
@@ -79,7 +80,6 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             cal.set(Calendar.SECOND, 0)                 // set second in minute
             cal.set(Calendar.MILLISECOND, 0)
             val secondDate = cal.time
-
             controller.setSelectedDates(firstDate to secondDate)
             field = date
         }
@@ -100,7 +100,8 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         LayoutInflater.from(context).inflate(R.layout.calendar, this, true)
         val a = context?.theme?.obtainStyledAttributes(attrs, R.styleable.CalendarView, 0, 0)
         try {
-            nbMonth = a?.getInteger(R.styleable.CalendarView_nb_month, NUMBER_OF_MONTHS) ?: NUMBER_OF_MONTHS
+            nbMonthInFuture = a?.getInteger(R.styleable.CalendarView_nb_month_in_future, NUMBER_OF_MONTHS) ?: NUMBER_OF_MONTHS
+            nbMonthInPast = a?.getInteger(R.styleable.CalendarView_nb_month_in_past, 0) ?: 0
             disabledColor = a?.getColor(R.styleable.CalendarView_disabled_color, Color.parseColor("#55555555")) ?: Color.parseColor("#55555555")
             selectedTextColor = a?.getColor(R.styleable.CalendarView_selected_text_color, Color.parseColor("#FF000000")) ?: Color.parseColor("#FF000000")
             val mode = a?.getInt(R.styleable.CalendarView_cv_pick_mode, 0)
@@ -117,16 +118,30 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         val linearManager = LinearLayoutManager(context)
         adapter = CalendarAdapter({ date, _ -> controller.onDayClicked(date) }, selectedColor, disabledColor, selectedTextColor)
 
-        val dividerItemDecoration = DividerItemDecoration(context,
-                linearManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(context, linearManager.orientation)
 
-        adapter.items = (0 until nbMonth).toMutableList()
+        adapter.items = (0 until (nbMonthInPast + nbMonthInFuture+1)).toMutableList()
+
+
+        min = Calendar.getInstance().apply {
+            if (nbMonthInPast > 0) {
+                add(Calendar.MONTH, -nbMonthInPast)
+            } else {
+                add(Calendar.DAY_OF_MONTH, -1)
+            }
+        }.time
+
         findViewById<RecyclerView>(R.id.calendarRecyclerView).apply {
             layoutManager = linearManager
             adapter = this@CalendarView.adapter
             addItemDecoration(dividerItemDecoration)
         }
-
+        val scrollPosition: Int = if (nbMonthInPast == 0) {
+            0
+        } else {
+            nbMonthInPast
+        }
+        linearManager.scrollToPositionWithOffset(scrollPosition, 0)
     }
 
     fun setOnDateSelectedListener(listener: ((Date) -> Unit)?) {

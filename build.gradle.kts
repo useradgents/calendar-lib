@@ -8,14 +8,14 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.1.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 group="com.github.useradgents"
-version="1.2.0"
+version="1.3.0"
 
 allprojects {
     repositories {
