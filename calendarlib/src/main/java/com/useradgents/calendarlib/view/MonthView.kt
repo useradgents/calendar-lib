@@ -61,8 +61,11 @@ class MonthView : FrameLayout {
     }
 
 
-    fun setDeltaMonth(month: Int) {
+    fun setDeltaMonth(min: Date?, month: Int) {
         cal = Calendar.getInstance()
+        min?.let {
+            cal.time = it
+        }
         cal.firstDayOfWeek = Calendar.MONDAY
 
         cal.set(Calendar.DAY_OF_MONTH, 1)
