@@ -15,6 +15,7 @@ import com.useradgents.calendarlib.controller.CalendarController
 import com.useradgents.calendarlib.controller.CalendarControllerInterface
 import com.useradgents.calendarlib.controller.CalendarSingleController
 import com.useradgents.calendarlib.controller.CalendarViewInterface
+import timber.log.Timber
 import java.util.*
 
 
@@ -29,6 +30,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     private var onUnavailableDate: (() -> Unit)? = null
     private lateinit var controller: CalendarControllerInterface
     private lateinit var adapter: CalendarAdapter
+    private lateinit var linearManager: LinearLayoutManager
 
     var nbMonthInFuture: Int = -1
     private var nbMonthInPast: Int = -1
@@ -81,6 +83,8 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             cal.set(Calendar.MILLISECOND, 0)
             val secondDate = cal.time
             controller.setSelectedDates(firstDate to secondDate)
+            val position = date?.first?.let { getSelectedMonthPosition(it, min!!, (nbMonthInPast + nbMonthInFuture + 1)) }
+            position?.let { scrollToSelectedDate(it) }
             field = date
         }
 
@@ -115,13 +119,13 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         }
         selectedColor = fetchAccentColor(attrs)
 
-        val linearManager = LinearLayoutManager(context)
+        linearManager = LinearLayoutManager(context)
         adapter = CalendarAdapter({ date, _ -> controller.onDayClicked(date) }, selectedColor, disabledColor, selectedTextColor)
 
         val dividerItemDecoration = DividerItemDecoration(context, linearManager.orientation)
 
-        adapter.items = (0 until (nbMonthInPast + nbMonthInFuture+1)).toMutableList()
-
+        val totalMonths = nbMonthInPast + nbMonthInFuture + 1
+        adapter.items = (0 until totalMonths).toMutableList()
 
         min = Calendar.getInstance().apply {
             if (nbMonthInPast > 0) {
@@ -136,11 +140,20 @@ class CalendarView : FrameLayout, CalendarViewInterface {
             adapter = this@CalendarView.adapter
             addItemDecoration(dividerItemDecoration)
         }
-        val scrollPosition: Int = if (nbMonthInPast == 0) {
-            0
+        val scrollPosition: Int = if (selectedDates == null) {
+            if (nbMonthInPast == 0) {
+                0
+            } else {
+                nbMonthInPast
+            }
         } else {
-            nbMonthInPast
+            getSelectedMonthPosition(selectedDates!!.first!!, min!!, totalMonths)
         }
+        scrollToSelectedDate(scrollPosition)
+
+    }
+
+    private fun scrollToSelectedDate(scrollPosition: Int) {
         linearManager.scrollToPositionWithOffset(scrollPosition, 0)
     }
 
@@ -149,8 +162,7 @@ class CalendarView : FrameLayout, CalendarViewInterface {
     }
 
     fun setOnRangeSelectedListener(listener: ((Date, Date) -> Unit)?) {
-        onRangeSelectedListener = listener
-    }
+        onRangeSelectedListener = listener }
 
     fun setOnUnavailableDate(listener: (() -> Unit)?) {
         onUnavailableDate = listener
@@ -186,5 +198,27 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         }
 
         return color
+    }
+
+    private fun getSelectedMonthPosition(firstSelectedDate: Date, minDate: Date, totalMonths: Int,): Int {
+        var position = -1
+        var index = 0
+        val firstSelectedCalendar = Calendar.getInstance().apply {
+            time = firstSelectedDate
+        }
+        do {
+            val anyCalendar = Calendar.getInstance().apply {
+                time = minDate
+                add(Calendar.MONTH, index)
+            }
+            if (firstSelectedCalendar[Calendar.YEAR] == anyCalendar[Calendar.YEAR] && (firstSelectedCalendar[Calendar.MONTH] == anyCalendar[Calendar.MONTH])){
+                position = index
+            }
+
+            index++
+        } while (position == -1 && index < totalMonths)
+
+
+        return  position
     }
 }
