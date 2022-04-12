@@ -1,6 +1,7 @@
 package com.useradgents.calendarlib.view
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -113,17 +114,38 @@ class MonthView : FrameLayout {
                         dayView.setText(cal.time.dayOfMonth())
 
                         if (max == null && min != null) {
-                            uiHandler.post { dayView.isEnabled = cal.time.after(min) }
+                            uiHandler.post {
+                                dayView.isEnabled = cal.time.after(min)
+                                if (isDateSelected(dayView)) {
+                                    dayView.setTextColor(Color.WHITE)
+                                }
+                            }
                         } else if (min == null && max != null) {
-                            uiHandler.post { dayView.isEnabled = cal.time.before(max) }
+                            uiHandler.post {
+                                dayView.isEnabled = cal.time.before(max)
+                                if (isDateSelected(dayView)) {
+                                    dayView.setTextColor(Color.WHITE)
+                                }
+                            }
                         } else if (min != null && max != null) {
-                            uiHandler.post { dayView.isEnabled = cal.time.before(max) && cal.time.after(min) }
+                            uiHandler.post {
+                                dayView.isEnabled = cal.time.before(max) && cal.time.after(min)
+                                if (isDateSelected(dayView)) {
+                                    dayView.setTextColor(Color.WHITE)
+                                }
+                            }
                         }
 
                         if (disabledDays?.firstOrNull { it.time == cal.time.time } != null
-                                && dayView.text.isNotEmpty()) {
-                            uiHandler.post { dayView.isEnabled = false }
+                            && dayView.text.isNotEmpty()) {
+                            uiHandler.post {
+                                dayView.isEnabled = false
+                                if (isDateSelected(dayView)) {
+                                    dayView.setTextColor(Color.WHITE)
+                                }
+                            }
                         }
+
 
                         dayView.onClickListener { date, view ->
                             listener?.invoke(date, view)
@@ -175,6 +197,22 @@ class MonthView : FrameLayout {
             dayView.setNotSelected()
         }
     }
+
+    private fun isDateSelected(dayView: DayView): Boolean {
+        if (firstSelectedDays == null || secondSelectedDays == null) {
+            return false
+        }
+
+        val isBetweenSelectedDates =
+            dayView.date.after(firstSelectedDays) && dayView.date.before(secondSelectedDays)
+        val isBetweenMinMax = dayView.date.after(min) && dayView.date.before(max)
+        val isFirstOrLastSelected =
+            dayView.date.day() == secondSelectedDays?.day() || dayView.date.day() == firstSelectedDays?.day()
+        val isMinOrMax = dayView.date.day() == max?.day() || dayView.date.day() == min?.day()
+
+        return (isBetweenSelectedDates && isBetweenMinMax) || isFirstOrLastSelected || isMinOrMax
+    }
+
 
     private fun checkIfDateSelected(time: Date?): SelectionState {
         return when {
