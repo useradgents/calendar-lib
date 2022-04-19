@@ -150,6 +150,8 @@ class MonthView : FrameLayout {
                         dayView.onClickListener { date, view ->
                             listener?.invoke(date, view)
                         }
+                    } else {
+                        dayView.visibility =  View.INVISIBLE
                     }
                     updateCellState(dayView.date, dayView)
                     row.addView(dayView)
