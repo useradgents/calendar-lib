@@ -130,9 +130,8 @@ class CalendarView : FrameLayout, CalendarViewInterface {
         min = Calendar.getInstance().apply {
             if (nbMonthInPast > 0) {
                 add(Calendar.MONTH, -nbMonthInPast)
-            } else {
-                add(Calendar.DAY_OF_MONTH, -1)
             }
+            add(Calendar.DAY_OF_MONTH, -1)
         }.time
 
         findViewById<RecyclerView>(R.id.calendarRecyclerView).apply {

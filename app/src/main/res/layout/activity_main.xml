@@ -12,8 +12,8 @@
         android:layout_height="match_parent"
         android:paddingEnd="32dp"
         android:paddingStart="32dp"
-        app:nb_month_in_future="6"
-        app:nb_month_in_past="0"
+        app:nb_month_in_future="7"
+        app:nb_month_in_past="12"
         app:selected_color="#D2D502"
         app:selected_text_color="#FFFFFF" />
 

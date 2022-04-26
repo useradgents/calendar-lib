@@ -114,22 +114,22 @@ class MonthView : FrameLayout {
                         dayView.setText(cal.time.dayOfMonth())
 
                         if (max == null && min != null) {
+                            dayView.isEnabled = cal.time.after(min)
                             uiHandler.post {
-                                dayView.isEnabled = cal.time.after(min)
                                 if (isDateSelected(dayView)) {
                                     dayView.setTextColor(Color.WHITE)
                                 }
                             }
                         } else if (min == null && max != null) {
+                            dayView.isEnabled = cal.time.before(max)
                             uiHandler.post {
-                                dayView.isEnabled = cal.time.before(max)
                                 if (isDateSelected(dayView)) {
                                     dayView.setTextColor(Color.WHITE)
                                 }
                             }
                         } else if (min != null && max != null) {
+                            dayView.isEnabled = cal.time.before(max) && cal.time.after(min)
                             uiHandler.post {
-                                dayView.isEnabled = cal.time.before(max) && cal.time.after(min)
                                 if (isDateSelected(dayView)) {
                                     dayView.setTextColor(Color.WHITE)
                                 }
@@ -138,8 +138,8 @@ class MonthView : FrameLayout {
 
                         if (disabledDays?.firstOrNull { it.time == cal.time.time } != null
                             && dayView.text.isNotEmpty()) {
+                            dayView.isEnabled = false
                             uiHandler.post {
-                                dayView.isEnabled = false
                                 if (isDateSelected(dayView)) {
                                     dayView.setTextColor(Color.WHITE)
                                 }
@@ -210,9 +210,8 @@ class MonthView : FrameLayout {
         val isBetweenMinMax = dayView.date.after(min) && dayView.date.before(max)
         val isFirstOrLastSelected =
             dayView.date.day() == secondSelectedDays?.day() || dayView.date.day() == firstSelectedDays?.day()
-        val isMinOrMax = dayView.date.day() == max?.day() || dayView.date.day() == min?.day()
 
-        return (isBetweenSelectedDates && isBetweenMinMax) || isFirstOrLastSelected || isMinOrMax
+        return (isBetweenSelectedDates && isBetweenMinMax) || isFirstOrLastSelected
     }
 
 

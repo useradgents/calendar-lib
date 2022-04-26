@@ -15,7 +15,7 @@ buildscript {
 }
 
 group="com.github.useradgents"
-version="1.3.1"
+version="1.3.2"
 
 allprojects {
     repositories {
